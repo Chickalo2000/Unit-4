@@ -63,11 +63,11 @@ async function main() {
   console.log("=== Embedding Inspector Lab ===");
   console.log("Generating embeddings for three sentences...");
 
-  // Updated test sentences to focus on movie-related examples
+  // Updated test sentences to focus on weather-related examples
   const sentences = [
-    "The movie was excellent and entertaining.",
-    "The movie was terrible and boring.",
-    "I enjoyed watching the film."
+    "The precipitation is expected to commence shortly.",
+    "It's going to rain soon.",
+    "The weather forecast indicates imminent rainfall."
   ];
 
   // Generate embeddings for each sentence
