@@ -63,11 +63,11 @@ async function main() {
   console.log("=== Embedding Inspector Lab ===");
   console.log("Generating embeddings for three sentences...");
 
-  // Updated test sentences to focus on pizza-related examples
+  // Updated test sentences to focus on movie-related examples
   const sentences = [
-    "I like pizza.",
-    "I really love eating delicious, hot pizza.",
-    "Pizza is good."
+    "The movie was excellent and entertaining.",
+    "The movie was terrible and boring.",
+    "I enjoyed watching the film."
   ];
 
   // Generate embeddings for each sentence
