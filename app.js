@@ -63,11 +63,11 @@ async function main() {
   console.log("=== Embedding Inspector Lab ===");
   console.log("Generating embeddings for three sentences...");
 
-  // Updated test sentences to include new examples
+  // Updated test sentences to focus on pizza-related examples
   const sentences = [
-    "The cat sat on the mat.",
-    "The dog sat on the mat.",
-    "The cat sat on the hat."
+    "I like pizza.",
+    "I really love eating delicious, hot pizza.",
+    "Pizza is good."
   ];
 
   // Generate embeddings for each sentence
