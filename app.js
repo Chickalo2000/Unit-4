@@ -80,7 +80,7 @@ async function main() {
   }
 
   // Show the distances between the embeddings
-  console.log("\n=== Embedding Vectors ===\n");
+  console.log("\n=== Cosine Similarities ===\n");
   for (let i = 0; i < embeddingsArray.length; i++) {
     const current = i;
     const next = (i + 1) % embeddingsArray.length;
