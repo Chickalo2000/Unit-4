@@ -88,15 +88,6 @@ async function main() {
     console.log(`Cosine similarity between Sentence ${current + 1} and Sentence ${next + 1}: ${similarity.toFixed(4)}`);
   }
 
-  // Calculate and display cosine similarities
-  const similarity12 = cosineSimilarity(embeddingsArray[0], embeddingsArray[1]).toFixed(4);
-  const similarity23 = cosineSimilarity(embeddingsArray[1], embeddingsArray[2]).toFixed(4);
-  const similarity31 = cosineSimilarity(embeddingsArray[2], embeddingsArray[0]).toFixed(4);
-
-  console.log(`Cosine Similarity between Sentence 1 and Sentence 2: ${similarity12}`);
-  console.log(`Cosine Similarity between Sentence 2 and Sentence 3: ${similarity23}`);
-  console.log(`Cosine Similarity between Sentence 3 and Sentence 1: ${similarity31}`);
-
   console.log("\n📊 Observations:");
   console.log("- Each embedding is just an array of floating-point numbers");
   console.log("- Sentences 1 and 2 (about dogs) will have similar values in many dimensions");
