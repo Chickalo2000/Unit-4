@@ -1,8 +1,18 @@
 import { OpenAIEmbeddings } from "@langchain/openai";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-// Load environment variables
-dotenv.config();
+// Get directory of current file
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Load environment variables from .env file
+dotenv.config({ path: path.join(__dirname, ".env") });
+
+// Set OpenAI base URL for GitHub Models
+process.env.OPENAI_API_BASE = "https://models.inference.ai.azure.com";
+process.env.OPENAI_API_KEY = process.env.GITHUB_TOKEN;
 
 /**
  * Calculate cosine similarity between two vectors
@@ -39,12 +49,12 @@ async function main() {
     process.exit(1);
   }
 
-  // Create OpenAIEmbeddings instance
+  // Create OpenAIEmbeddings instance with GitHub Models endpoint
   const embeddings = new OpenAIEmbeddings({
+    apiKey: process.env.GITHUB_TOKEN,
     model: "text-embedding-3-small",
     configuration: {
-      baseURL: "https://models.inference.ai.azure.com",
-      apiKey: process.env.GITHUB_TOKEN
+      baseURL: "https://models.inference.ai.azure.com"
     },
     check_embedding_ctx_length: false
   });
