@@ -63,11 +63,11 @@ async function main() {
   console.log("=== Embedding Inspector Lab ===");
   console.log("Generating embeddings for three sentences...");
 
-  // Updated test sentences to include multilingual examples
+  // Updated test sentences to include new examples
   const sentences = [
-    "The dog barked loudly.",
-    "El perro ladró fuerte.",  // Spanish
-    "Le chien a aboyé fort."   // French
+    "The cat sat on the mat.",
+    "The dog sat on the mat.",
+    "The cat sat on the hat."
   ];
 
   // Generate embeddings for each sentence
