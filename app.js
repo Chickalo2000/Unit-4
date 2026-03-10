@@ -63,11 +63,11 @@ async function main() {
   console.log("=== Embedding Inspector Lab ===");
   console.log("Generating embeddings for three sentences...");
 
-  // Updated test sentences to focus on weather-related examples
+  // Updated test sentences to include diverse topics
   const sentences = [
-    "The precipitation is expected to commence shortly.",
-    "It's going to rain soon.",
-    "The weather forecast indicates imminent rainfall."
+    "I love programming in JavaScript.",
+    "Chocolate cake is delicious.",
+    "The ocean is very deep."
   ];
 
   // Generate embeddings for each sentence
