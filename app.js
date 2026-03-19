@@ -1,6 +1,10 @@
 import { OpenAIEmbeddings } from "@langchain/openai";
 import { MemoryVectorStore } from "langchain/vectorstores/memory";
 import { Document } from "@langchain/core/documents";
+import { 
+  RecursiveCharacterTextSplitter, 
+  CharacterTextSplitter, 
+} from "@langchain/textsplitters";
 import { readFile } from "node:fs/promises";
 import path from "node:path";
 import dotenv from "dotenv";
@@ -30,6 +34,41 @@ const embeddings = new OpenAIEmbeddings({
 
 const vectorStore = new MemoryVectorStore(embeddings);
 
+// BEST PRACTICE: Separate chunk processing from file loading
+/**
+ * Processes and adds pre-split document chunks to the vector store with localized metadata
+ */
+async function loadDocumentWithChunks(vectorStore, filePath, chunks) {
+  try {
+    const totalChunks = chunks.length;
+    let processedCount = 0;
+
+    for (let i = 0; i < totalChunks; i++) {
+        const chunk = chunks[i];
+        const chunkNum = i + 1;
+        
+        // Update chunk metadata with specific position info
+        chunk.metadata = {
+            ...chunk.metadata,
+            fileName: `${path.basename(filePath)} (Chunk ${chunkNum}/${totalChunks})`,
+            createdAt: new Date().toISOString(),
+            chunkIndex: chunkNum
+        };
+
+        // Add the specific chunk to the vector store
+        await vectorStore.addDocuments([chunk]);
+        
+        processedCount++;
+        console.log(`   [Progress] Chunk ${chunkNum}/${totalChunks} stored successfully.`);
+    }
+
+    return processedCount;
+  } catch (error) {
+    console.error(`❌ Error in loadDocumentWithChunks for ${path.basename(filePath)}:`, error.message);
+    throw error;
+  }
+}
+
 // Function to load a document from file with token limit validation
 async function loadDocument(vectorStore, filePath) {
   try {
@@ -48,23 +87,34 @@ async function loadDocument(vectorStore, filePath) {
     // This prevents hitting token limit errors
     const estimatedTokens = estimateTokenCount(fileContent);
 
-    if (estimatedTokens > MAX_TOKENS) {
-      console.error(
-        `\n❌ Error loading ${path.basename(filePath)}`
-      );
+    if (estimatedTokens > 1000) {
       console.log(
-        `⚠️ This document is too large to embed as a single chunk.`
+        `⚠️ Document ${path.basename(filePath)} is large (~${estimatedTokens} tokens). Splitting into chunks...`
       );
+
+      // Initialize the RecursiveCharacterTextSplitter
+      const splitter = new RecursiveCharacterTextSplitter({
+        chunkSize: 2000,
+        chunkOverlap: 200,
+      });
+
+      // Split the text into chunks
+      const output = await splitter.createDocuments(
+        [fileContent],
+        [{ 
+          fileName: path.basename(filePath),
+          createdAt: new Date().toISOString(),
+        }]
+      );
+
+      // BEST PRACTICE: Use a dedicated function for chunk processing
+      // This allows for individual chunk tracking and metadata enhancement
+      const chunksStored = await loadDocumentWithChunks(vectorStore, filePath, output);
+
       console.log(
-        `Estimated tokens: ${estimatedTokens} / Maximum allowed: ${MAX_TOKENS}`
+        `✅ Successfully chunked and loaded ${path.basename(filePath)} into ${chunksStored} segments.`
       );
-      console.log(
-        `Token limit exceeded. The embedding model can only process up to 8,192 tokens at once.`
-      );
-      console.log(
-        `Solution: The document needs to be split into smaller chunks.`
-      );
-      return null;
+      return chunksStored;
     }
 
     // Create a LangChain Document object with metadata
